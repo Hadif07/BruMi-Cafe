@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BruMi Cafe</title>
+
+    <!-- jQuery Mobile CSS CDN -->
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+
+    <!-- jQuery & jQuery Mobile JS CDN -->
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <style>
+        .ui-page, 
+        .ui-page-theme-a, 
+        .ui-page-theme-b {
+            background-color: inherit !important;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(13, 8, 8, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .card img {
+            width: 140px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            margin: 10px 0 8px 0;
+            font-size: 1.1rem;
+            color: #251a98;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .contact-container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .contact-item strong {
+            width: 90px;
+            color: #2c3e50;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        /* ADDED: Order Modal styling for Task 3 & 4 requirements */
+        .order-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .order-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            margin: 10% auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .price-summary {
+            background: #eef2f7;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HOME PAGE -->
+<div data-role="page" id="home">
+    <div data-role="header" data-theme="b">
+        <h1>BruMi Cafe</h1>
+    </div>
+
+    <!-- NAVBAR -->
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#home" class="ui-btn-active">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <div data-role="content" class="container">
+        <h2>Welcome to Brumi Cafe!</h2>
+        <p>A cozy little place for coffee, comfort food and sweet moments.</p>
+        
+        <!-- ADDED: Interactive jQuery Banner/Notification for Task 2 -->
+        <div id="promoBanner" style="background-color: #a72839; color: white; padding: 12px; border-radius: 6px; text-align: center; margin-bottom: 15px;">
+            🎉 Special Offer: Buy 1 Free 1 for the new users! Click to dismiss.
+        </div>
+        <button id="toggleInfoBtn" class="ui-btn ui-corner-all ui-btn-b">About Us</button>
+        <div id="storeInfo" style="display:none; padding:10px; background:#e9ecef; border-radius:6px; margin-bottom:15px;">
+            <p><strong>Cafe Hours:</strong> 10:00AM - 5:00 PM (Mon-Fri)</p>
+            <p><strong>Location:</strong> Politeknik Kuching Sarawak</p>
+        </div>
+
+        <h3>Our Favourites Menu</h3>
+
+        <!-- Responsive Card Grid -->
+        <div class="card-grid">
+            <div class="card">
+                <img src="images/Matcha Latte.jpg" alt="Matcha Latte" width="140" height="180">
+                <h3>Matcha Latte</h3>
+                <p>A creamy and smooth matcha latte that's perfect for a relaxing moment.</p>
+                <!-- UPDATED: Activated Buy Button with onclick handler -->
+                <button type="button" class="btn btn-danger w-100 buy-btn" onclick="openOrderModal('Matcha Latte', 12.90)">RM12.90 - Buy Now</button>
+            </div>
+
+            <div class="card">
+                <img src="images/Spanish Latte.jpg" alt="Spanish Latte" width="140" height="180">
+                <h3>Spanish Latte</h3>
+                <p>A rich and creamy Spanish latte with a hint of cinnamon.</p>
+                <!-- UPDATED: Activated Buy Button with onclick handler -->
+                <button type="button" class="btn btn-danger w-100 buy-btn" onclick="openOrderModal('Spanish Latte', 14.90)">RM14.90 - Buy Now</button>
+            </div>
+
+            <div class="card">
+                <img src="images/Burnt Cheesecake.jpg" alt="Burnt Cheesecake" width="140" height="180">
+                <h3>Burnt Cheesecake</h3>
+                <p>A decadent dessert with a rich and creamy texture.</p>
+                <!-- UPDATED: Activated Buy Button with onclick handler -->
+                <button type="button" class="btn btn-danger w-100 buy-btn" onclick="openOrderModal('Burnt Cheesecake', 19.90)">RM19.90 - Buy Now</button>
+            </div>
+
+            <div class="card">
+                <img src="images/Croissant.jpg" alt="Croissant" width="140" height="180">
+                <h3>Croissant</h3>
+                <p>A buttery and flaky pastry that's perfect for breakfast.</p>
+                <!-- UPDATED: Activated Buy Button with onclick handler -->
+                <button type="button" class="btn btn-danger w-100 buy-btn" onclick="openOrderModal('Croissant', 8.90)">RM8.90 - Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <h4 class="footer-text">©️ 2026 BruMi Cafe</h4>
+    </div>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div data-role="page" id="products">
+    <div data-role="header" data-theme="b">
+        <a href="#home" data-icon="home" data-iconpos="notext"></a>
+        <h1>Our Favourites Menu</h1>
+    </div>
+
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products" class="ui-btn-active">Products</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <div data-role="content" class="container">
+        <ul data-role="listview" data-inset="true">
+            <li>
+                <a href="javascript:void(0)" onclick="openOrderModal('Matcha Latte', 12.90)">
+                    <img src="images/Matcha Latte.jpg" alt="Matcha Latte" width="140" height="180">
+                    <h2>Matcha Latte</h2>
+                    <p>A creamy and refreshing matcha-based beverage.</p>
+                    <p class="ui-li-aside"><strong>RM12.90</strong></p>
+                </a>
+            </li>
+            
+            <li>
+                <a href="javascript:void(0)" onclick="openOrderModal('Spanish Latte', 14.90)">
+                    <img src="images/Spanish Latte.jpg" alt="Spanish Latte" width="140" height="180">
+                    <h2>Spanish Latte</h2>
+                    <p>A rich and creamy coffee drink with a hint of Spanish flair.</p>
+                    <p class="ui-li-aside"><strong>RM14.90</strong></p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0)" onclick="openOrderModal('Burnt Cheesecake', 19.90)">
+                    <img src="images/Burnt Cheesecake.jpg" alt="Burnt Cheesecake" width="140" height="180">
+                    <h2>Burnt Cheesecake</h2>
+                    <p>A decadent dessert with a rich and creamy texture.</p>
+                    <p class="ui-li-aside"><strong>RM19.90</strong></p>
+                </a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0)" onclick="openOrderModal('Croissant', 8.90)">
+                    <img src="images/Croissant.jpg" alt="Croissant" width="140" height="180">
+                    <h2>Croissant</h2>
+                    <p>A buttery and flaky pastry perfect for breakfast.</p>
+                    <p class="ui-li-aside"><strong>RM8.90</strong></p>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <h4 class="footer-text">©️ 2026 BruMi Cafe</h4>
+    </div>
+</div>
+
+<!-- CONTACT PAGE -->
+<div data-role="page" id="contact">
+    <div data-role="header" data-theme="b">
+        <a href="#home" data-icon="home" data-iconpos="notext"></a>
+        <h1>Contact Us</h1>
+    </div>
+
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#contact" class="ui-btn-active">Contact</a></li>
+        </ul>
+    </div>
+
+ <div class="contact-container">
+    <form id="contactForm">
+        <h2>Contact Us</h2>
+
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required><br>
+
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number"><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="5" cols="40" placeholder="Write your message here..." required></textarea><br>
+
+        <button type="submit">Send Message</button>
+        <button type="reset">Clear</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+        e.preventDefault(); // Prevents the form from submitting and causing the page error
+        alert("Message sent successfully!");
+    });
+</script>
+
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <h4 class="footer-text">©️ 2026 BruMi Cafe</h4>
+    </div>
+</div>
+
+<!-- ADDED: Order Modal Component for Purchasing Foods & Drinks (Task 3, 4 & 5 compliance) -->
+<div id="orderModal" class="order-modal">
+    <div class="order-content">
+        <h3 id="modalFoods&DrinksTitle">Order Foods & Drinks</h3>
+        <p>Unit Price: RM<span id="modalFoods&DrinksPrice">0.00</span></p>
+        
+        <form id="purchaseForm">
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" required placeholder="Enter your name">
+
+            <label for="Foods&DrinksQuantity">Quantity:</label>
+            <input type="number" id="Foods&DrinksQuantity" value="1" min="1" max="50" onchange="calculateTotalPrice()" onkeyup="calculateTotalPrice()">
+
+            <div class="price-summary">
+                Total Price: RM<span id="totalPriceDisplay">0.00</span>
+            </div>
+
+            <button type="button" class="ui-btn ui-btn-b ui-corner-all" onclick="confirmOrder()">Confirm Order</button>
+            <button type="button" class="ui-btn ui-corner-all" onclick="closeOrderModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- ADDED: jQuery Interactivity & JavaScript Logic for Task Requirements -->
+<script>
+    var currentUnitPrice = 0;
+
+    // --- Task 2: jQuery Functions (click, fadeOut, slideToggle) ---
+    $(document).ready(function() {
+        // jQuery Function 1: click() & fadeOut()
+        $("#promoBanner").click(function() {
+            $(this).fadeOut(500);
+        });
+
+        // jQuery Function 2: slideToggle()
+        $("#toggleInfoBtn").click(function() {
+            $("#storeInfo").slideToggle(300);
+        });
+    });
+
+    // --- Task 3: JavaScript Functions (Calculate Total Price & Confirm Order) ---
+    // JavaScript Function 1: Calculate total price dynamically
+    function calculateTotalPrice() {
+        var qty = parseInt(document.getElementById("Foods&DrinksQuantity").value) || 0;
+        var total = currentUnitPrice * qty;
+        document.getElementById("totalPriceDisplay").innerText = total.toFixed(2);
+    }
+
+    function openOrderModal(title, price) {
+        currentUnitPrice = price;
+        document.getElementById("modalFoods&DrinksTitle").innerText = "Order: " + title;
+        document.getElementById("modalFoods&DrinksPrice").innerText = price.toFixed(2);
+        document.getElementById("Foods&DrinksQuantity").value = 1;
+        calculateTotalPrice();
+        $("#orderModal").fadeIn(300); // jQuery Function 3: fadeIn()
+    }
+
+    function closeOrderModal() {
+        $("#orderModal").fadeOut(300);
+    }
+
+    // JavaScript Function 2: Validate input & show confirmation message
+    function confirmOrder() {
+        var name = document.getElementById("customerName").value.trim();
+        var qty = document.getElementById("Foods&DrinksQuantity").value;
+        var total = document.getElementById("totalPriceDisplay").innerText;
+
+        if (name === "") {
+            alert("Please enter your name to proceed with the purchase.");
+            return;
+        }
+
+        var confirmed = confirm("Hello " + name + "!\nDo you want to confirm your order for " + qty + " copy/copies total RM" + total + "?");
+        if (confirmed) {
+            alert("Thank you for your purchase! Your order has been placed successfully.");
+            closeOrderModal();
+            document.getElementById("customerName").value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
